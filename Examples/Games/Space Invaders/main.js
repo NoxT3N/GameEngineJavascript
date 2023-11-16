@@ -87,7 +87,7 @@ function createAliens(){
     for(let row = 0; row<alienRows; row++){
         for(let col = 0; col<alienColumns; col++){
             const x = col*(alienWidth + alienPadding);
-            const y = row*(aleinHeight + alienPadding);
+            const y = row*(alienHeight + alienPadding);
             aliensArray.push(new Alien(x,y,alienWidth,alienHeight));
         }
     }
@@ -95,10 +95,73 @@ function createAliens(){
 }
 
 function update(){
+    if(keyStates.ArrowLeft){
+        player.moveLeft();
+    }
+    if(keyStates.ArrowRight){
+        player.moveRight();
+    }
+    if(keyStates.Space){
+        player.fire();
+        keyStates.Space = false;
+    }
 
+    bullets.forEach((bullet, index)=>{
+        bullet.update();
+        if(bullet.y<0){
+            bullets.splice(index,1);
+        }
+    })
+
+    let moveDownThisFrame = false;
+    if(alienMoveDown){
+        moveDownThisFrame = true;
+        alienMoveDown = false;
+    }
+
+    aliens.forEach((alien)=>{
+        if(moveDownThisFrame){
+            alien.y += 20;
+        }
+        else{
+            alien.x += 2*alienDirection;
+        }
+    });
+
+    bullets.forEach((bullet, bulletIndex)=>{
+        bullet.update();
+        aliens.forEach((alien, alienIndex)=>{
+            if(
+                alien &&
+                bullet.x < alien.x + alien.width &&
+                bullet.x + bullet.width > alien.x &&
+                bullet.y < alien.y + alien.height &&
+                bullet.y + bullet.height > alien.y
+            ){
+                bullets.splice(bulletIndex, 1);
+                aliens.splice(alienIndex, 1);
+            }
+        })
+    });
+
+    if(aliens.lenght == 0){
+        resetGame();
+    }
+
+    const leftMostAlien = aliens.reduce((leftMost, current) => (current.x < leftMost.x ? current: leftMost), aliens[0]);
+    const rightMostAlien = aliens.reduce((rightMost, current) => (current.x > rightMost.x ? current: rightMost), aliens[0]);
+
+    if(!moveDownThisFrame && (rightMostAlien.x + alienWidth > canvas.width || leftMostAlien.x <0)){
+        alienDirection *= -1;
+        alienMoveDown = true;
+    }
 };
 
 function draw(){
+    ctx.clearRect(0,0, canvas.width, canvas.height);
+    player.draw();
+    bullets.forEach((bullet)=> bullet.draw());
+    aliens.forEach((alien)=> alien.draw());
 };
 
 function gameLoop(){
@@ -111,15 +174,24 @@ function gameLoop(){
     requestAnimationFrame(gameLoop);
 }
 
-function handleKeyDown(){
+function isGameOver(){
+    return aliens.some((alien)=> alien.y + alien.height >= canvas.height - player.height);
+}
+
+function resetGame(){
+    aliens.length = 0;
+    aliens.push(createAliens());
+}
+
+function handleKeyDown(e){
     if(e.code in keyStates){
         keyStates[e.code] = true;
     }
 }
 
-function handleKeyUp(){
+function handleKeyUp(e){
     if(e.code in keyStates){
-        keyStates[e.code] = true;
+        keyStates[e.code] = false;
     }
 }
 
