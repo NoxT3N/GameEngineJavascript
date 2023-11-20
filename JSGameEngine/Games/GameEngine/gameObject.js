@@ -25,3 +25,4 @@ class GameObject{
         return this.components.find((component) => component instanceof componentClass);
     }
 }
+export default GameObject;
