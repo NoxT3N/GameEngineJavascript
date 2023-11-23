@@ -1,4 +1,4 @@
-import Renderer from "./renderer";
+import Renderer from "./renderer.js";
 
 class Camera{
     constructor(target, width, height){
