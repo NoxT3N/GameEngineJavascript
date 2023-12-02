@@ -1,9 +1,9 @@
-import GameObject from "../GameEngine/gameobject";
-import Renderer from "../GameEngine/renderer";
-import Physics from "../GameEngine/physics";
-import { Images } from "../GameEngine/resources";
-import Player from "./player";
-import Platform from "./platform";
+import GameObject from "../GameEngine/gameobject.js";
+import Renderer from "../GameEngine/renderer.js";
+import Physics from "../GameEngine/physics.js";
+import { Images } from "../GameEngine/resources.js";
+import Player from "./player.js";
+import Platform from "./platform.js";
 
 class Enemy extends GameObject{
     constructor(x,y){
@@ -39,14 +39,14 @@ class Enemy extends GameObject{
                 this.movementDistance = 0;
             }
         }
-        const player = this.game.gameObject.find((obj)=> obj instanceof Player);
+        const player = this.game.gameObjects.find((obj)=> obj instanceof Player);
         if(physics.isColliding(player.getComponent(Physics))){
             player.collidedWithEnemy();
         }
 
-        const platform = this.game.gameObject.filter((obj)=> obj instanceof Platform);
+        const platforms = this.game.gameObjects.filter((obj)=> obj instanceof Platform);
         this.isOnPlatform = false;
-        for(const platform of platform){
+        for(const platform of platforms){
             if(physics.isColliding(platform.getComponent(Physics))){
                 physics.velocity.y=0;
                 physics.acceleration.y = 0;
@@ -54,9 +54,6 @@ class Enemy extends GameObject{
                 
             }
         }
-        
-
     }
-    
-
 }
+export default Enemy;

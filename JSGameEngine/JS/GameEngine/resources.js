@@ -8,7 +8,8 @@ const AudioFiles = {
     collect: "...",
 };
 
-Images.player.src = "./resources/images/player.png"
-Images.enemy.src = "./resources/images/enemy.png"
+Images.player.src = './resources/images/player/player.png'
+Images.enemy.src = './resources/images/enemy/enemy.png'
+
 
 export{Images, AudioFiles};

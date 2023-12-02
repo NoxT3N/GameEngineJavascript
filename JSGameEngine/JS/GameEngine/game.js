@@ -1,7 +1,9 @@
+import Camera from "./camera.js";
+
 class Game{
     constructor(canvasID){
         this.canvas = document.getElementById(canvasID);
-        this.ctx = this.canvas.getContext("2d");
+        this.ctx = this.canvas.getContext('2d');
         this.gameObjects = [];
         this.gameObjectsToRemove = [];
         this.lastFrameTime = 0;
@@ -32,7 +34,7 @@ class Game{
         for(const gameObject of this.gameObjects){
             gameObject.update(this.deltaTime);
         }
-        this.gameObjects = this.gameObjects.filler(obj => !this.gameObjectsToRemove.includes(obj));
+        this.gameObjects = this.gameObjects.filter(obj => !this.gameObjectsToRemove.includes(obj));
         this.gameObjectsToRemove = [];
     }
     draw(){

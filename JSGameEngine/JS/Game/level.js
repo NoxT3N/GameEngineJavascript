@@ -1,9 +1,9 @@
-import Game from "../GameEngine/game";
-import Player from "./player";
-import Enemy from "./enemy"
-import PlayerUI from "./playerUI";
-import Platform from "./platform";
-import Collectible from "./collectible";
+import Game from "../GameEngine/game.js";
+import Player from "./player.js";
+import Enemy from "./enemy.js";
+import PlayerUI from "./playerUI.js";
+import Platform from "./platform.js";
+import Collectible from "./collectible.js";
 
 class Level extends Game{
     constructor(canvasId){

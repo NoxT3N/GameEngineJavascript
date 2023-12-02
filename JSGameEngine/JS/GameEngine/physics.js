@@ -18,7 +18,7 @@ class Physics extends Component{
 
     isColliding(otherPhysics){ //AABB Collision
         const [left, right,top,bottom] = this.getBoundingBox();
-        const [otherLeft, otherRight, otherTop, otherBottom] = otherPhysics.getBoundingBox;
+        const [otherLeft, otherRight, otherTop, otherBottom] = otherPhysics.getBoundingBox();
 
         return left < otherRight && right>otherLeft && top<otherBottom && bottom>otherTop;
     }

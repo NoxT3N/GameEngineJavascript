@@ -1,6 +1,6 @@
-import GameObject from "../gameobject.js";
-import Renderer from "../renderer.js";
-import Physics from "../physics.js";
+import GameObject from "./gameobject.js";
+import Renderer from "./renderer.js";
+import Physics from "./physics.js";
 
 class Particle extends GameObject{
     constructor(x,y,width,height,color,duration){

@@ -1,17 +1,17 @@
-import GameObject from "../GameEngine/gameobject";
-import Renderer from "../GameEngine/renderer";
-import Physics from "../GameEngine/physics";
-import Input from "../GameEngine/input";
+import GameObject from "../GameEngine/gameobject.js";
+import Renderer from "../GameEngine/renderer.js";
+import Physics from "../GameEngine/physics.js";
+import Input from "../GameEngine/input.js";
 import{Images} from "../GameEngine/resources.js";
-import Platform from "./platform";
-import Collectible from "./collectible";
-import ParticleSystem from "../GameEngine/particleSystem";
+import Platform from "./platform.js";
+import Collectible from "./collectible.js";
+import ParticleSystem from "../GameEngine/particleSystem.js";
 //import Enemy from "./enemy";
 
 class Player extends GameObject{
     constructor(x,y){
         super(x,y);
-        this.renderer = new Renderer("blue",50,50, Images.player);
+        this.renderer = new Renderer('blue',50,50, Images.player);
         this.addComponent(this.renderer);
         this.addComponent(new Physics({x:0, y:0}));
         this.addComponent(new Input());
@@ -48,6 +48,7 @@ class Player extends GameObject{
         if(this.isJumping){
             this.updateJump(deltaTime);
         }
+
         const collectibles = this.game.gameObjects.filter((obj) => obj instanceof Collectible);
         for(const collectible of collectibles){
             if(physics.isColliding(collectible.getComponent(Physics))){
@@ -64,6 +65,7 @@ class Player extends GameObject{
 
         this.isOnPlatform = false;
         const platforms = this.game.gameObjects.filter((obj)=>obj instanceof Platform);
+
         for(const platform of platforms){
             if(physics.isColliding(platform.getComponent(Physics))){
                 if(!this.isJumping){
@@ -86,7 +88,7 @@ class Player extends GameObject{
         }
         super.update(deltaTime);
     }
-    handleGameInput(input){
+    handleGamepadInput(input){
         const gamepad = input.getGamepad();
         const physics = this.getComponent(Physics);
         if(gamepad){

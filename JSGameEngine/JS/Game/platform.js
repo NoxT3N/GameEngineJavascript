@@ -1,6 +1,6 @@
-import GameObject from "../GameEngine/gameobject";
-import Renderer from "../GameEngine/renderer";
-import Physics from "../GameEngine/physics";
+import GameObject from "../GameEngine/gameobject.js";
+import Renderer from "../GameEngine/renderer.js";
+import Physics from "../GameEngine/physics.js";
 
 class Platform extends GameObject{
     constructor(x,y,width,height,color = "gray"){

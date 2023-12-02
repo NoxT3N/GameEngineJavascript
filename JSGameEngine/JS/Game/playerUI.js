@@ -1,4 +1,4 @@
-import GameObject from "../GameEngine/gameobject";
+import GameObject from "../GameEngine/gameobject.js";
 import UI from "../GameEngine/ui.js";
 import Player from "./player.js";
 
@@ -9,7 +9,7 @@ class PlayerUI extends GameObject{
         this.addComponent(this.uiComponent);
     }
     update(deltaTime){
-        const player = this.game.gameObject.find((obj)=>obj instanceof Player);
+        const player = this.game.gameObjects.find((obj)=>obj instanceof Player);
         this.uiComponent.setText(`Lives: ${player.lives}
         Score: ${player.score}`);
     }

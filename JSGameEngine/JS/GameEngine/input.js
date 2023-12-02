@@ -9,11 +9,11 @@ class Input extends Component{
         document.addEventListener("keydown",(event)=>(this.keys[event.code]=true));
         document.addEventListener("keyup",(event)=>(this.keys[event.code]=false));
 
-        windows.addEventListener("gamepadconnected",(event)=>{
+        window.addEventListener("gamepadconnected",(event)=>{
             console.log("Gamepad Connected", event.gamepad);
             this.gamepadIndex = event.gamepad = event.gamepad.index;
         });
-        windows.addEventListener("gamepaddisconnected",(event)=>{
+        window.addEventListener("gamepaddisconnected",(event)=>{
             console.log("Gamepad disconnected", event.gamepad);
             this.gamepadIndex = null;
         })
