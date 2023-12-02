@@ -17,10 +17,10 @@ class Physics extends Component{
     }
 
     isColliding(otherPhysics){ //AABB Collision
-        const [left, right,top,bottom] = this.getBoundingBox();
+        const [left, right, top, bottom] = this.getBoundingBox();
         const [otherLeft, otherRight, otherTop, otherBottom] = otherPhysics.getBoundingBox();
 
-        return left < otherRight && right>otherLeft && top<otherBottom && bottom>otherTop;
+        return left < otherRight && right > otherLeft && top < otherBottom && bottom> otherTop;
     }
 
     getBoundingBox(){
@@ -28,7 +28,7 @@ class Physics extends Component{
         const left = this.gameObject.x;
         const right = this.gameObject.x + renderer.width;
         const top = this.gameObject.y;
-        const bottom = this.gameObject.y;
+        const bottom = this.gameObject.y + renderer.height;
 
         return[left,right,top,bottom];
     }
