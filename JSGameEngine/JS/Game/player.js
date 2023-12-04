@@ -22,6 +22,7 @@ class Player extends GameObject{
         this.isOnPlatform = false;
         this.isJumping = false;
         this.jumpForce = 400;
+        this.jumpTime = 0.3;
         this.jumpTimer = 0;
         this.isInvulnerable = false;
         this.isGamepadMovement = false;
@@ -34,15 +35,19 @@ class Player extends GameObject{
 
         this.handleGamepadInput(input);
 
-        if(!this.isGamepadMovement && input.isKeyDown("ArrowRight")){
+        if(!this.isGamepadMovement && input.isKeyDown('ArrowRight')){
             physics.velocity.x = 100;
             this.direction = -1;
         }
-        else if(!this.isGamepadMovement && input.isKeyDown("ArrowLeft")){
+        else if(!this.isGamepadMovement && input.isKeyDown('ArrowLeft')){
+            physics.velocity.x = -100;
+            this.direction = 1;
+        }
+        else if(!this.isGamepadMovement){
             physics.velocity.x = 0;
         }
 
-        if(!this.isGamepadJump && input.isKeyDown("ArrowUp")&& this.isOnPlatform){
+        if(!this.isGamepadJump && input.isKeyDown('ArrowUp')&& this.isOnPlatform){
             this.startJump();
         }
         if(this.isJumping){
@@ -63,7 +68,7 @@ class Player extends GameObject{
             //}
         //}
 
-        this.isOnPlatform = false;
+        this.isOnPlatform = false; //resets before
         const platforms = this.game.gameObjects.filter((obj)=>obj instanceof Platform);
 
         for(const platform of platforms){
@@ -71,7 +76,7 @@ class Player extends GameObject{
                 if(!this.isJumping){
                     physics.velocity.y = 0;
                     physics.acceleration.y = 0;
-                    this.y = platform.y - this.Renderer.height;
+                    this.y = platform.y - this.renderer.height;
                     this.isOnPlatform = true;
                 }
             }
@@ -115,9 +120,9 @@ class Player extends GameObject{
         }
     }
     startJump(){
-        if(!this.isOnPlatform){
+        if(this.isOnPlatform){
             this.isJumping = true;
-            this.jumpTimer = this.jumpTimer;
+            this.jumpTimer = this.jumpTime;
             this.getComponent(Physics).velocity.y = -this.jumpForce;
             this.isOnPlatform = false;
         }
@@ -141,7 +146,7 @@ class Player extends GameObject{
 
     collect(collectible){
         this.score += collectible.value;
-        console.log(`Score: $(this.score}`);
+        console.log(`Score: ${this.score}`);
         this.emitCollectParticles(collectible);
     }
 

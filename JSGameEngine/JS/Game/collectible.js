@@ -6,7 +6,7 @@ class Collectible extends GameObject{
     constructor(x,y, width, height, color = 'gold'){
         super(x,y);
         this.addComponent(new Renderer(color,width,height));
-        this.addComponent(new Physics({x:0,y:0},{x:0,y:0}));
+        this.addComponent(new Physics({x:0,y:0},{x:0,y:0},{x:0,y:0}));
         
         this.tag = 'collectible';
 

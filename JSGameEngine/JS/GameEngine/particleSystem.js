@@ -3,7 +3,7 @@ import Particle from "./particle.js"
 import Physics from "./physics.js"
 
 class ParticleSystem extends GameObject{
-    constructor(x,y,color,lifeDuration, emitDuration){
+    constructor(x,y,color,count,lifeDuration, emitDuration){
         super(x,y);
         this.color = color;
         this.count = count;
