@@ -13,8 +13,9 @@ class ParticleSystem extends GameObject{
     }
 
     update(deltaTime){
-        if(this.emitDuration){
+        if(this.emitDuration > 0 ){
             this.emitParticles(deltaTime)
+            //Decrease the emit duration by the time that has passed since last frame
             this.emitDuration -= deltaTime;
         }
         else if(this.emitDuration <= 0){
@@ -25,10 +26,10 @@ class ParticleSystem extends GameObject{
     emitParticles(deltaTime){
         const particlesToEmit = Math.ceil((this.count/this.emitDuration)*deltaTime);
 
-        for(let i = 0; i<particlesToEmit&& this.particleEmitted < this.count; i++){
-            const lifeDuration = this.lifeDuration + Math.random() -.5;
-            const particle = new Particle(this.x, this.y, Math.random()*5, Math.random*5, this.color, lifeDuration);
-            particle.addComponent(new Physics({x: (Math.random()-.5)*50,y:(Math.random()-.5)*50}, {x:0,y:0}));
+        for(let i = 0; i < particlesToEmit&& this.particleEmitted < this.count; i++){
+            const lifeDuration = this.lifeDuration + Math.random() -0.5;
+            const particle = new Particle(this.x, this.y, Math.random()*5, Math.random()* 5, this.color, lifeDuration);
+            particle.addComponent(new Physics({x: (Math.random()-.5)*50,y:(Math.random()-0.5)*50}, {x:0,y:0}));
             this.game.addGameObject(particle);
             this.particlesEmitted++;
         }

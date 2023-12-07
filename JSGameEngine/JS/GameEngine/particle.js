@@ -12,7 +12,7 @@ class Particle extends GameObject{
     update(deltaTime){
         this.duration -= deltaTime;
         if(this.duration<=0){
-            this.game.removeGameObject(this)
+            this.game.removeGameObject(this);
         }
         super.update(deltaTime);
     }

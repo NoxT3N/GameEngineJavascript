@@ -6,7 +6,7 @@ import{Images} from "../GameEngine/resources.js";
 import Platform from "./platform.js";
 import Collectible from "./collectible.js";
 import ParticleSystem from "../GameEngine/particleSystem.js";
-//import Enemy from "./enemy";
+import Enemy from "./enemy.js";
 
 class Player extends GameObject{
     constructor(x,y){
@@ -61,12 +61,13 @@ class Player extends GameObject{
                 this.game.removeGameObject(collectible);
             }
         }
-        //const enemies = this.game.gameObjects.filter(obj)=> obj instanceof Enemy);
-        //for(const enemy of enemies){
-            //if(physics.isColliding(enemy.getComponent(Physics))){
-                //this.collideWithEnemy();
-            //}
-        //}
+
+        const enemies = this.game.gameObjects.filter((obj) => obj instanceof Enemy);
+        for(const enemy of enemies){
+            if(physics.isColliding(enemy.getComponent(Physics))){
+                this.collidedWithEnemy();
+            }
+        }
 
         this.isOnPlatform = false; //resets before
         const platforms = this.game.gameObjects.filter((obj)=>obj instanceof Platform);
