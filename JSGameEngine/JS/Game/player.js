@@ -7,6 +7,7 @@ import Platform from "./platform.js";
 import Collectible from "./collectible.js";
 import ParticleSystem from "../GameEngine/particleSystem.js";
 import Enemy from "./enemy.js";
+import Animation from "../GameEngine/animation.js"; 
 
 class Player extends GameObject{
     constructor(x,y){
@@ -15,6 +16,7 @@ class Player extends GameObject{
         this.addComponent(this.renderer);
         this.addComponent(new Physics({x:0, y:0}));
         this.addComponent(new Input());
+        this.addComponent(new Animation('../resources/player/idle'));
 
         this.direction = 1;
         this.lives = 3;
@@ -32,6 +34,9 @@ class Player extends GameObject{
     update(deltaTime){
         const physics = this.getComponent(Physics);
         const input = this.getComponent(Input);
+        const idleAnim = this.getComponent(Animation);
+
+        idleAnim.play();
 
         this.handleGamepadInput(input);
 
