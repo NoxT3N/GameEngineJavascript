@@ -12,11 +12,11 @@ import Animation from "../GameEngine/animation.js";
 class Player extends GameObject{
     constructor(x,y){
         super(x,y);
-        this.renderer = new Renderer('blue',50,50, Images.player);
+        this.renderer = new Renderer('blue',50,50, Images.playerIdle[0]);
         this.addComponent(this.renderer);
         this.addComponent(new Physics({x:0, y:0}));
         this.addComponent(new Input());
-        this.addComponent(new Animation('../resources/player/idle'));
+        this.addComponent(new Animation(this.renderer,"playerIdle"));
 
         this.direction = 1;
         this.lives = 3;
