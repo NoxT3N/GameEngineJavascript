@@ -16,7 +16,8 @@ class Player extends GameObject{
         this.addComponent(this.renderer);
         this.addComponent(new Physics({x:0, y:0}));
         this.addComponent(new Input());
-        this.addComponent(new Animation(this.renderer,"playerIdle"));
+        this.animation = new Animation("Idle", 24, this.renderer);
+        this.addComponent(this.animation);
 
         this.direction = 1;
         this.lives = 3;
@@ -34,9 +35,7 @@ class Player extends GameObject{
     update(deltaTime){
         const physics = this.getComponent(Physics);
         const input = this.getComponent(Input);
-        const idleAnim = this.getComponent(Animation);
-
-        idleAnim.play();
+        this.animation.play();
 
         this.handleGamepadInput(input);
 

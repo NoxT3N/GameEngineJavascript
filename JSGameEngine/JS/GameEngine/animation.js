@@ -1,33 +1,26 @@
-import Component from "./component.js";
-import Renderer from "./renderer.js";
-import { Images } from "../GameEngine/resources.js";
+import Renderer from "../GameEngine/renderer.js";
+import Component from "../GameEngine/component.js";
 
-class Animation extends Component {
-  constructor(renderer, animName) {
+class Animation extends Component{
+  constructor(animName, frameRate, renderer) {
     super();
-    this.sprites = [];
-    this.currentSpriteIndex = 0;
+    this.images = [];
+    this.frameRate = frameRate;
+    this.currentFrame = 0;
     this.isPlaying = false;
-    this.animationFrameId = null;
+    this.frameDuration = 1 / frameRate;
+    this.elapsedTime = 0;
     this.renderer = renderer;
-    this.animName = animName;
-    this.loadSprites();
+
+    // Load images asynchronously
+    this.loadImages(animName);
   }
 
-  async loadSprites() {
-    if (this.animName === "playerIdle") {
-      const imagePromises = Images.playerIdle.map((imagePath) => this.loadImage(imagePath));
-      try {
-        const loadedImages = await Promise.all(imagePromises);
-        if (loadedImages.length > 0) {
-          this.sprites = loadedImages;
-          console.log('Sprites loaded:', this.sprites);
-        } else {
-          console.log('No sprites loaded.');
-        }
-      } catch (error) {
-        console.error('Error loading sprites:', error);
-      }
+  async loadImages(animName) {
+    for (let i = 1; i < 10; i++) {
+      const src = `./resources/images/player/idle/idle${i}.png`;
+      const image = await this.loadImage(src);
+      this.images.push(image);
     }
   }
 
@@ -35,47 +28,39 @@ class Animation extends Component {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.onload = () => resolve(img);
-      img.onerror = (error) => reject(error);
+      img.onerror = reject;
       img.src = src;
+      console.log(`Image loaded: ${src}`);
     });
   }
-  
 
   play() {
+    if (this.isPlaying) return;
     this.isPlaying = true;
-    this.currentSpriteIndex = 0;
-    this.startAnimation();
-    console.log('Animation Playing');
+    this.elapsedTime = 0;
+    this.timerId = requestAnimationFrame(this.update.bind(this));
   }
 
   stop() {
+    if (!this.isPlaying) return;
     this.isPlaying = false;
-    this.currentSpriteIndex = 0;
-    cancelAnimationFrame(this.animationFrameId);
+    cancelAnimationFrame(this.timerId);
   }
 
-  startAnimation() {
-    const animate = () => {
-      if (this.isPlaying) {
-        // Render the current sprite using Renderer class
-        this.renderer.image = this.sprites[this.currentSpriteIndex];
-        this.renderer.draw(this.renderer.ctx,this.renderer.image);
+  update(deltaTime) {
+    this.elapsedTime += deltaTime;
 
-        // Increment the currentSpriteIndex
-        this.currentSpriteIndex++;
+    while (this.elapsedTime >= this.frameDuration) {
+      this.currentFrame = (this.currentFrame + 1) % this.images.length;
+      this.elapsedTime -= this.frameDuration;
+    }
 
-        // If the currentSpriteIndex exceeds the length of sprites array, reset it to 0
-        if (this.currentSpriteIndex >= this.sprites.length) {
-          this.currentSpriteIndex = 0;
-        }
+    const currentImage = this.images[this.currentFrame];
+    this.gameObject.getComponent(Renderer).image = currentImage;
 
-        // Use requestAnimationFrame to call startAnimation recursively
-        this.animationFrameId = requestAnimationFrame(animate);
-      }
-    };
-
-    // Start the animation loop
-    animate();
+    if (this.isPlaying) {
+      this.timerId = requestAnimationFrame(this.update.bind(this));
+    }
   }
 }
 
