@@ -16,8 +16,16 @@ class Player extends GameObject{
         this.addComponent(this.renderer);
         this.addComponent(new Physics({x:0, y:0}));
         this.addComponent(new Input());
-        this.animation = new Animation("Idle", 24, this.renderer);
-        this.addComponent(this.animation);
+        this.idleAnim = new Animation("idle", "player",9, 4, this.renderer);
+        this.addComponent(this.idleAnim);
+        this.jumpAnim = new Animation("jump", "player",1 ,1, this.renderer);
+        this.addComponent(this.jumpAnim);
+        this.runAnim = new Animation("run", "player", 6, 12, this.renderer);
+        this.addComponent(this.runAnim);
+        this.attackAnim = new Animation("attack", "player", 5, 2, this.renderer);
+        this.addComponent(this.attackAnim);
+        this.hurtAnim = new Animation("hurt", "player", 2, 1, this.renderer);
+        this.addComponent(this.hurtAnim);
 
         this.direction = 1;
         this.lives = 3;
@@ -30,12 +38,38 @@ class Player extends GameObject{
         this.isInvulnerable = false;
         this.isGamepadMovement = false;
         this.isGamepadJump = false;
+        this.idleAnim.play();
     }
 
     update(deltaTime){
         const physics = this.getComponent(Physics);
         const input = this.getComponent(Input);
-        this.animation.play();
+
+        if(physics.velocity.x !== 0 && !this.isJumping){
+            this.runAnim.play();
+        }
+
+        if(input.isKeyDown('KeyF') && !this.isJumping && !this.attackAnim.isPlaying){
+            this.idleAnim.stop();
+            this.runAnim.stop();
+            this.jumpAnim.stop();
+            this.attackAnim.play();
+            console.log("Attack");
+            console.log(this.attackAnim.currentFrame);
+        }
+        else if(!input.isKeyDown('KeyF') && this.attackAnim.isPlaying){
+            this.attackAnim.stop();
+        }
+
+
+
+        if (!input.isKeyDown('ArrowRight') && !input.isKeyDown('ArrowLeft') && !input.isKeyDown('ArrowUp')) {
+            this.runAnim.stop();
+            this.idleAnim.play();
+        }
+        else{
+            this.idleAnim.stop();
+        }
 
         this.handleGamepadInput(input);
 
@@ -130,6 +164,9 @@ class Player extends GameObject{
             this.jumpTimer = this.jumpTime;
             this.getComponent(Physics).velocity.y = -this.jumpForce;
             this.isOnPlatform = false;
+            this.idleAnim.stop();
+            this.runAnim.stop();
+            this.jumpAnim.play();
         }
     }
 
@@ -137,14 +174,17 @@ class Player extends GameObject{
         this.jumpTimer -= deltaTime;
         if(this.jumpTimer<=0||this.getComponent(Physics).velocity.y>0){
             this.isJumping = false;
+            this.jumpAnim.stop();
         }
     }
     collidedWithEnemy(){
         if(!this.isInvulnerable){
+            this.hurtAnim.play();
             this.lives--;
             this.isInvulnerable = true;
             setTimeout(()=>{
                 this.isInvulnerable = false;
+                this.hurtAnim.stop();
             },2000)
         }
     }

@@ -1,8 +1,8 @@
-import Renderer from "../GameEngine/renderer.js";
 import Component from "../GameEngine/component.js";
+import Renderer from "../GameEngine/renderer.js";
 
-class Animation extends Component{
-  constructor(animName, frameRate, renderer) {
+class Animation extends Component {
+  constructor(animName, gameObjectName, frameNums, frameRate, renderer) {
     super();
     this.images = [];
     this.frameRate = frameRate;
@@ -11,57 +11,73 @@ class Animation extends Component{
     this.frameDuration = 1 / frameRate;
     this.elapsedTime = 0;
     this.renderer = renderer;
+    this.gameObjectName = gameObjectName;
+    this.animName = animName;
+    this.frameNums = frameNums;
 
     // Load images asynchronously
-    this.loadImages(animName);
+    this.loadImages(animName, gameObjectName, frameNums);
   }
 
-  async loadImages(animName) {
-    for (let i = 1; i < 10; i++) {
-      const src = `./resources/images/player/idle/idle${i}.png`;
-      const image = await this.loadImage(src);
-      this.images.push(image);
+  async loadImages(animName, gameObjectName, frameNums) {
+    try {
+      // Generate an array of image loading promises for each frame
+      const imagePromises = Array.from({ length: frameNums }, (_, i) => {
+        const src = `./resources/images/${gameObjectName}/${animName}/${animName}${i + 1}.png`;
+        return this.loadImage(src);
+      });
+
+      // Wait for all image loading promises to resolve
+      this.images = await Promise.all(imagePromises);
+
+      console.log(`Images loaded successfully for ${animName}`);
+    } catch (error) {
+      console.error(`Error loading images for ${animName}:`, error);
     }
   }
 
   loadImage(src) {
+    // Returns a promise that resolves with an Image object when the image is loaded
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.onload = () => resolve(img);
-      img.onerror = reject;
+      img.onerror = (error) => reject(`Error loading image at ${src}: ${error.message}`);
       img.src = src;
-      console.log(`Image loaded: ${src}`);
     });
   }
 
   play() {
-    if (this.isPlaying) return;
-    this.isPlaying = true;
-    this.elapsedTime = 0;
-    this.timerId = requestAnimationFrame(this.update.bind(this));
+    // Check if the animation is already playing or if no images are loaded
+    if (this.isPlaying || !this.images.length) return;
+    this.isPlaying = true; // Set the animation to playing
+    this.elapsedTime = 0; // Reset elapsed time
   }
 
   stop() {
+    // Check if the animation is not playing
     if (!this.isPlaying) return;
-    this.isPlaying = false;
-    cancelAnimationFrame(this.timerId);
+    this.isPlaying = false; // Set the animation to not playing
   }
 
   update(deltaTime) {
-    this.elapsedTime += deltaTime;
-
-    while (this.elapsedTime >= this.frameDuration) {
-      this.currentFrame = (this.currentFrame + 1) % this.images.length;
-      this.elapsedTime -= this.frameDuration;
-    }
-
+    if (!this.isPlaying) return;
+  
+    // Calculate the elapsed frames based on the frame rate and delta time
+    this.elapsedTime += deltaTime * this.frameRate;
+  
+    // Get the total frames and update the current frame index
+    const frameCount = this.images.length;
+    this.currentFrame = Math.floor(this.elapsedTime) % frameCount;
+  
+    // Set the current frame image to the Renderer component
     const currentImage = this.images[this.currentFrame];
-    this.gameObject.getComponent(Renderer).image = currentImage;
-
-    if (this.isPlaying) {
-      this.timerId = requestAnimationFrame(this.update.bind(this));
+    const rendererComponent = this.gameObject.getComponent(Renderer);
+  
+    if (rendererComponent) {
+      rendererComponent.image = currentImage;
     }
   }
+  
 }
 
 export default Animation;

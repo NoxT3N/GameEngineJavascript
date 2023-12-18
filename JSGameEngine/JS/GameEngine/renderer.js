@@ -15,7 +15,7 @@ class Renderer extends Component{
             const w = this.width;
             const h = this.height;
 
-            const flipX = this.gameObject.direction === -1;
+            const flipX = this.gameObject.direction === 1;
             if(!flipX){
                 ctx.drawImage(this.image, x, y, w, h);
             } else {
