@@ -49,14 +49,13 @@ class Animation extends Component {
   play() {
     // Check if the animation is already playing or if no images are loaded
     if (this.isPlaying || !this.images.length) return;
-    this.isPlaying = true; // Set the animation to playing
-    this.elapsedTime = 0; // Reset elapsed time
+    this.isPlaying = true; 
+    this.elapsedTime = 0; 
   }
 
   stop() {
-    // Check if the animation is not playing
     if (!this.isPlaying) return;
-    this.isPlaying = false; // Set the animation to not playing
+    this.isPlaying = false;
   }
 
   update(deltaTime) {

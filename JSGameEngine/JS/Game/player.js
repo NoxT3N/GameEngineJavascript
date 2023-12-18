@@ -22,7 +22,7 @@ class Player extends GameObject{
         this.addComponent(this.jumpAnim);
         this.runAnim = new Animation("run", "player", 6, 12, this.renderer);
         this.addComponent(this.runAnim);
-        this.attackAnim = new Animation("attack", "player", 5, 2, this.renderer);
+        this.attackAnim = new Animation("attack", "player", 5, 5, this.renderer);
         this.addComponent(this.attackAnim);
         this.hurtAnim = new Animation("hurt", "player", 2, 1, this.renderer);
         this.addComponent(this.hurtAnim);
